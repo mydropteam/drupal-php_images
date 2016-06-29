@@ -67,7 +67,7 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
 COPY docker-php-pecl-install /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-php-pecl-install
 RUN docker-php-pecl-install \
-  mongo
+  mongodb
 
 RUN pecl install yaml-beta && echo "extension=yaml.so" > /usr/local/etc/php/conf.d/ext-yaml.ini
 
