@@ -139,3 +139,8 @@ VOLUME /var/www/html
 
 # Expose 80 for apache, 9000 for xdebug
 EXPOSE 80 9000
+
+# Set a custom entrypoint.		
+COPY core/docker-entrypoint.sh /		
+RUN chmod +x /docker-entrypoint.sh		
+ENTRYPOINT ["/docker-entrypoint.sh"]
