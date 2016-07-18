@@ -1,16 +1,11 @@
 # Pull base image.
-FROM php:7.0-apache
+FROM php:5.6-apache
 
 COPY config/php.ini /usr/local/etc/php/
 
 # ADD BASHRC CONFIG
 COPY config/bashrc /root/
 RUN mv /root/bashrc /root/.bashrc
-
-RUN apt-get update && apt-get install --fix-missing wget -y
-RUN echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
-RUN echo "deb-src http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
-RUN cd /tmp && wget https://www.dotdeb.org/dotdeb.gpg && apt-key add dotdeb.gpg
 
 RUN apt-get update && apt-get install --fix-missing -y \
   apt-transport-https \
@@ -29,9 +24,11 @@ RUN apt-get update && apt-get install --fix-missing -y \
   libxslt1-dev \
   libyaml-dev \
   linux-libc-dev \
+  memcached \
   mysql-client \
   nano \
-  php7.0-dev \
+  php5-dev \
+  php5-mysqlnd \
   ruby-dev \
   rubygems \
   sudo \
@@ -39,77 +36,64 @@ RUN apt-get update && apt-get install --fix-missing -y \
   vim \
   wget \
   zip
+  
+# Install PECL packages
+COPY docker-php-pecl-install /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-php-pecl-install
+RUN docker-php-pecl-install \
+  uploadprogress-1.0.3.1 \
+  memcache-3.0.8 \
+  yaml-1.2.0 \
+  mongo-1.6.12
 
-# Install memcached for PHP 7
-RUN cd /tmp && git clone https://github.com/php-memcached-dev/php-memcached.git
-RUN cd /tmp/php-memcached && sudo git checkout php7 && phpize && ./configure --disable-memcached-sasl && make && make install
-RUN touch /usr/local/etc/php/conf.d/memcached.ini &&\
- echo "extension=/usr/local/lib/php/extensions/no-debug-non-zts-20151012/memcached.so" >> /usr/local/etc/php/conf.d/memcached.ini
-
-
-
-RUN chmod +x /usr/local/bin/docker-php-ext-install
-RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
-&& docker-php-ext-install \
+RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/
+RUN docker-php-ext-install \
   calendar \
   exif \
   gd \
+  ftp \
   intl \
   mbstring \
   mcrypt \
+  mysql \
+  mysqli \
   opcache \
   pdo_mysql \
   soap \
   xsl \
   zip
 
-# Install PECL packages
-COPY docker-php-pecl-install /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-php-pecl-install
-RUN docker-php-pecl-install \
-  mongodb
-
-RUN pecl install yaml-beta && echo "extension=yaml.so" > /usr/local/etc/php/conf.d/ext-yaml.ini
-
 COPY core/memcached.conf /etc/memcached.conf
 
-# Installation of the XHProf fork tideways php-profiler. XHProf is not compatible with PHP7.
-RUN \
-cd /tmp && git clone https://github.com/tideways/php-profiler-extension.git && cd /tmp/php-profiler-extension && phpize7.0 && ./configure && make && make install; \
-echo "extension=tideways.so" >> /usr/local/etc/php/php.ini && echo "tideways.auto_prepend_library=0" >> /usr/local/etc/php/php.ini; \
-
 # Installation node.js
-RUN curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
-RUN DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install -y nodejs
-
-RUN \
-cd /tmp && git clone https://github.com/tideways/php-profiler-extension.git && cd /tmp/php-profiler-extension && phpize7.0 && ./configure && make && make install; \
-echo "extension=tideways.so" >> /usr/local/etc/php/php.ini && echo "tideways.auto_prepend_library=0" >> /usr/local/etc/php/php.ini; \
-
-git clone https://github.com/perftools/xhgui.git /var/www/xhgui; \
-chmod -R 0777 /var/www/xhgui/cache; \
-cd /var/www/xhgui/ && php install.php; \
-sed -i -e '$a\
-[xhgui]\
-auto_prepend_file = "/var/www/xhgui/external/header.php"' \
-/usr/local/etc/php/php.ini
-
-COPY core/xhgui/config.php /var/www/xhgui/config/
+  RUN curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash - &&\
+  DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install -y nodejs
 
 # Installation of Composer
-RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php
-RUN cd /usr/src && mv composer.phar /usr/bin/composer
+  RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php &&\
+  cd /usr/src && mv composer.phar /usr/bin/composer
 
 # Installation of drush
-RUN git clone https://github.com/drush-ops/drush.git /usr/local/src/drush &&\
+  RUN git clone https://github.com/drush-ops/drush.git /usr/local/src/drush &&\
   cd /usr/local/src/drush && git checkout 8.1.2 &&\
   ln -s /usr/local/src/drush/drush /usr/bin/drush &&\
   cd /usr/local/src/drush && composer update && composer install
-
+  
 # Installation of Console
 RUN curl https://drupalconsole.com/installer -L -o drupal.phar &&\
   mv drupal.phar /usr/local/bin/drupal &&\
   chmod +x /usr/local/bin/drupal
+  
+# install xhprof and xhgui if needed
+RUN docker-php-pecl-install xhprof-0.9.4; \
+  git clone https://github.com/perftools/xhgui.git /var/www/xhgui; \
+  chmod -R 0777 /var/www/xhgui/cache; \
+  cd /var/www/xhgui/ && php install.php; \
+  sed -i -e '$a [xhgui] auto_prepend_file = "/var/www/xhgui/external/header.php"' \
+  /usr/local/etc/php/php.ini
+
+COPY core/xhgui/config.php /var/www/xhgui/config/
+
 
 RUN rm -rf /var/www/html && \
   mkdir -p /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html && \
@@ -132,7 +116,8 @@ RUN ( \
   echo "opcache.enable_cli=1"; \
   ) > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-RUN a2enmod rewrite expires && service apache2 restart
+RUN a2enmod rewrite expires &&\
+  service apache2 restart
 
 # Our apache volume
 VOLUME /var/www/html
