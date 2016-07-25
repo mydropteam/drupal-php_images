@@ -41,12 +41,14 @@ RUN apt-get update && apt-get install --fix-missing -y \
 RUN pecl install \
   uploadprogress \
   memcache \
-  mongo \
+  mongodb \
+  xhprof-0.9.4 \
   yaml \
   && docker-php-ext-enable \
   uploadprogress \
-  memcach \
-  mongo \
+  memcache \
+  mongodb \
+  xhprof \
   yaml
 
 RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/
@@ -87,8 +89,7 @@ RUN curl https://drupalconsole.com/installer -L -o drupal.phar &&\
   mv drupal.phar /usr/local/bin/drupal &&\
   chmod +x /usr/local/bin/drupal
   
-# install xhprof and xhgui if needed
-RUN docker-php-pecl-install xhprof-0.9.4
+# Installation of xhgui
 RUN git clone https://github.com/perftools/xhgui.git /var/www/xhgui &&\
   chmod -R 0777 /var/www/xhgui/cache &&\
   cd /var/www/xhgui/ &&\ 
