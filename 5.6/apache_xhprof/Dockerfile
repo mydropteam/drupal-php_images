@@ -38,13 +38,16 @@ RUN apt-get update && apt-get install --fix-missing -y \
   zip
   
 # Install PECL packages
-COPY docker-php-pecl-install /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-php-pecl-install
-RUN docker-php-pecl-install \
-  uploadprogress-1.0.3.1 \
-  memcache-3.0.8 \
-  yaml-1.2.0 \
-  mongo-1.6.12
+RUN pecl install \
+  uploadprogress \
+  memcache \
+  mongo \
+  yaml \
+  && docker-php-ext-enable \
+  uploadprogress \
+  memcach \
+  mongo \
+  yaml
 
 RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-install \
@@ -85,11 +88,12 @@ RUN curl https://drupalconsole.com/installer -L -o drupal.phar &&\
   chmod +x /usr/local/bin/drupal
   
 # install xhprof and xhgui if needed
-RUN docker-php-pecl-install xhprof-0.9.4; \
-  git clone https://github.com/perftools/xhgui.git /var/www/xhgui; \
-  chmod -R 0777 /var/www/xhgui/cache; \
-  cd /var/www/xhgui/ && php install.php; \
-  sed -i -e '$a [xhgui] auto_prepend_file = "/var/www/xhgui/external/header.php"' \
+RUN docker-php-pecl-install xhprof-0.9.4
+RUN git clone https://github.com/perftools/xhgui.git /var/www/xhgui &&\
+  chmod -R 0777 /var/www/xhgui/cache &&\
+  cd /var/www/xhgui/ &&\ 
+  php install.php 
+RUN sed -i -e '$a [xhgui] auto_prepend_file = "/var/www/xhgui/external/header.php"' \
   /usr/local/etc/php/php.ini
 
 COPY core/xhgui/config.php /var/www/xhgui/config/
@@ -122,5 +126,5 @@ RUN a2enmod rewrite expires &&\
 # Our apache volume
 VOLUME /var/www/html
 
-# Expose 80 for apache, 9000 for xdebug
-EXPOSE 80 9000
+# Expose 80 for apache
+EXPOSE 80
