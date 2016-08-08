@@ -64,9 +64,7 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
   zip
 
 # Install PECL packages
-COPY docker-php-pecl-install /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-php-pecl-install
-RUN docker-php-pecl-install \
+RUN pecl install \
   mongodb
 
 RUN pecl install yaml-beta && echo "extension=yaml.so" > /usr/local/etc/php/conf.d/ext-yaml.ini
@@ -139,8 +137,3 @@ VOLUME /var/www/html
 
 # Expose 80 for apache, 9000 for xdebug
 EXPOSE 80 9000
-
-# Set a custom entrypoint.		
-COPY core/docker-entrypoint.sh /		
-RUN chmod +x /docker-entrypoint.sh		
-ENTRYPOINT ["/docker-entrypoint.sh"]
