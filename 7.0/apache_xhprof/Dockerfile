@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   libxslt1-dev \
   libyaml-dev \
   linux-libc-dev \
+  memcached \
   mysql-client \
   nano \
   php7.0-dev \
@@ -65,10 +66,8 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
 
 # Install PECL packages
 RUN pecl install \
-  uploadprogress \
   mongodb \
 && docker-php-ext-enable \
-  uploadprogress \
   mongodb 
 
 RUN pecl install yaml-beta && echo "extension=yaml.so" > /usr/local/etc/php/conf.d/ext-yaml.ini
