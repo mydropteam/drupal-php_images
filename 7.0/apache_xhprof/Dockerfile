@@ -65,16 +65,15 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
 
 # Install PECL packages
 RUN pecl install \
-  mongodb
+  uploadprogress \
+  mongodb \
+&& docker-php-ext-enable \
+  uploadprogress \
+  mongodb 
 
 RUN pecl install yaml-beta && echo "extension=yaml.so" > /usr/local/etc/php/conf.d/ext-yaml.ini
 
 COPY core/memcached.conf /etc/memcached.conf
-
-# Installation of the XHProf fork tideways php-profiler. XHProf is not compatible with PHP7.
-RUN \
-cd /tmp && git clone https://github.com/tideways/php-profiler-extension.git && cd /tmp/php-profiler-extension && phpize7.0 && ./configure && make && make install; \
-echo "extension=tideways.so" >> /usr/local/etc/php/php.ini && echo "tideways.auto_prepend_library=0" >> /usr/local/etc/php/php.ini; \
 
 # Installation node.js
 RUN curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
@@ -85,10 +84,10 @@ cd /tmp && git clone https://github.com/tideways/php-profiler-extension.git && c
 echo "extension=tideways.so" >> /usr/local/etc/php/php.ini && echo "tideways.auto_prepend_library=0" >> /usr/local/etc/php/php.ini; \
 
 git clone https://github.com/perftools/xhgui.git /var/www/xhgui; \
-chmod -R 0777 /var/www/xhgui/cache; \
-cd /var/www/xhgui/ && php install.php; \
+chmod -R 0777 /var/www/xhgui/cache &&\
+cd /var/www/xhgui/ && php install.php &&\
 sed -i -e '$a\
-[xhgui]\
+[xhgui] \
 auto_prepend_file = "/var/www/xhgui/external/header.php"' \
 /usr/local/etc/php/php.ini
 
