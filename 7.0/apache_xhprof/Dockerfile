@@ -109,7 +109,7 @@ RUN curl https://drupalconsole.com/installer -L -o drupal.phar &&\
 
 RUN rm -rf /var/www/html && \
   mkdir -p /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html && \
-  chown -R www-data:www-data /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html
+  chown -R www-data:www-data /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www
 
 # installation of ssmtp
 RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y ssmtp && rm -r /var/lib/apt/lists/*

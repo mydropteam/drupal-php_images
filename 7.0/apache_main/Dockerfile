@@ -113,7 +113,7 @@ RUN touch /usr/local/etc/php/conf.d/xdebug.ini &&\
 
 RUN rm -rf /var/www/html && \
   mkdir -p /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html && \
-  chown -R www-data:www-data /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html
+  chown -R www-data:www-data /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www
 
 # Installation of PHP_CodeSniffer with Drupal coding standards.
 # See https://www.drupal.org/node/1419988#coder-composer
