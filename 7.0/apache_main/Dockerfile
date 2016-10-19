@@ -61,8 +61,6 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
   xsl \
   zip
 
-RUN pecl install yaml-beta && echo "extension=yaml.so" > /usr/local/etc/php/conf.d/ext-yaml.ini
-
 COPY core/memcached.conf /etc/memcached.conf
 
 # SASS and Compass installation

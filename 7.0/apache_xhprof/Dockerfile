@@ -70,8 +70,6 @@ RUN pecl install \
 && docker-php-ext-enable \
   mongodb 
 
-RUN pecl install yaml-beta && echo "extension=yaml.so" > /usr/local/etc/php/conf.d/ext-yaml.ini
-
 COPY core/memcached.conf /etc/memcached.conf
 
 # Installation node.js
