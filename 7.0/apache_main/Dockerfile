@@ -67,7 +67,7 @@ COPY core/memcached.conf /etc/memcached.conf
 RUN gem install compass
 
 # Installation node.js
-RUN curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
+RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
 RUN DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install -y nodejs
 
 # Installation of LESS
@@ -89,7 +89,7 @@ RUN cd /usr/src && mv composer.phar /usr/bin/composer
 
 # Installation of drush
 RUN git clone https://github.com/drush-ops/drush.git /usr/local/src/drush &&\
-  cd /usr/local/src/drush && git checkout 8.1.2 &&\
+  cd /usr/local/src/drush && git checkout 8.1.6 &&\
   ln -s /usr/local/src/drush/drush /usr/bin/drush &&\
   cd /usr/local/src/drush && composer update && composer install
 
