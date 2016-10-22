@@ -64,6 +64,7 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
 COPY core/memcached.conf /etc/memcached.conf
 
 # SASS and Compass installation
+RUN gem install sass
 RUN gem install compass
 
 # Installation node.js
