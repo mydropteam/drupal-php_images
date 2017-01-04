@@ -36,7 +36,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   vim \
   wget \
   zip
-  
+
 # Install PECL packages
 RUN pecl install \
   uploadprogress \
@@ -71,29 +71,29 @@ RUN docker-php-ext-install \
 COPY core/memcached.conf /etc/memcached.conf
 
 # Installation node.js
-  RUN curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash - &&\
+  RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo bash - &&\
   DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install -y nodejs
 
 # Installation of Composer
-  RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php &&\
+  RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php -- --version=1.2.4 &&\
   cd /usr/src && mv composer.phar /usr/bin/composer
 
 # Installation of drush
   RUN git clone https://github.com/drush-ops/drush.git /usr/local/src/drush &&\
-  cd /usr/local/src/drush && git checkout 8.1.2 &&\
+  cd /usr/local/src/drush && git checkout 8.1.6 &&\
   ln -s /usr/local/src/drush/drush /usr/bin/drush &&\
   cd /usr/local/src/drush && composer update && composer install
-  
+
 # Installation of Console
 RUN curl https://drupalconsole.com/installer -L -o drupal.phar &&\
   mv drupal.phar /usr/local/bin/drupal &&\
   chmod +x /usr/local/bin/drupal
-  
+
 # Installation of xhgui
 RUN git clone https://github.com/perftools/xhgui.git /var/www/xhgui &&\
   chmod -R 0777 /var/www/xhgui/cache &&\
-  cd /var/www/xhgui/ &&\ 
-  php install.php 
+  cd /var/www/xhgui/ &&\
+  php install.php
 RUN sed -i -e '$a [xhgui] auto_prepend_file = "/var/www/xhgui/external/header.php"' \
   /usr/local/etc/php/php.ini
 

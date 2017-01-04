@@ -36,7 +36,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   vim \
   wget \
   zip
-  
+
 # Install PECL packages
 COPY docker-php-pecl-install /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-php-pecl-install
@@ -68,13 +68,13 @@ COPY core/memcached.conf /etc/memcached.conf
 # SASS and Compass installation
 RUN gem install compass &&\
 
+# Installation node.js
+  curl -sL https://deb.nodesource.com/setup_6.x | sudo bash - && \
+  DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install -y nodejs; \
+
 # Installation of LESS
   npm update -g npm &&\
   npm install -g less && npm install -g less-plugin-clean-css; \
-
-# Installation node.js
-  curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash - &&\
-  DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install -y nodejs; \
 
 # Installation of Grunt
   npm install -g grunt-cli; \
@@ -86,27 +86,27 @@ RUN gem install compass &&\
   npm install -g bower
 
 # Installation of Composer
-  RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php &&\
+  RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php -- --version=1.2.4 &&\
   cd /usr/src && mv composer.phar /usr/bin/composer; \
 
 # Installation of drush
   git clone https://github.com/drush-ops/drush.git /usr/local/src/drush &&\
-  cd /usr/local/src/drush && git checkout 8.1.2 &&\
+  cd /usr/local/src/drush && git checkout 8.1.6 &&\
   ln -s /usr/local/src/drush/drush /usr/bin/drush &&\
   cd /usr/local/src/drush && composer update && composer install
-  
+
 # Installation of Console
 RUN curl https://drupalconsole.com/installer -L -o drupal.phar &&\
   mv drupal.phar /usr/local/bin/drupal &&\
   chmod +x /usr/local/bin/drupal
-  
+
 # Installation of PHP_CodeSniffer with Drupal coding standards.
 # See https://www.drupal.org/node/1419988#coder-composer
   RUN composer global require drupal/coder &&\
   ln -s ~/.composer/vendor/bin/phpcs /usr/local/bin &&\
   ln -s ~/.composer/vendor/bin/phpcbf /usr/local/bin &&\
   phpcs --config-set installed_paths ~/.composer/vendor/drupal/coder/coder_sniffer
-  
+
 # Installation of xdebug
   RUN apt-get install --fix-missing php5-xdebug -y &&\
   pecl install xdebug &&\
