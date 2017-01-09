@@ -75,7 +75,7 @@ COPY core/memcached.conf /etc/memcached.conf
   DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install -y nodejs
 
 # Installation of Composer
-  RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php -- --version=1.2.4 &&\
+  RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php -- --version=1.3.1 &&\
   cd /usr/src && mv composer.phar /usr/bin/composer
 
 # Installation of drush
