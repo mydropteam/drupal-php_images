@@ -161,8 +161,3 @@ RUN chmod 600 /var/www/.ssh/
 
 # Expose 80 for apache, 9000 for xdebug
 EXPOSE 80 9000
-
-# Set and run a custom entrypoint
-COPY core/docker-entrypoint.sh /
-RUN chmod 777 /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]
