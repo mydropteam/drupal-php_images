@@ -68,7 +68,7 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
 RUN pecl install \
   mongodb \
 && docker-php-ext-enable \
-  mongodb 
+  mongodb
 
 COPY core/memcached.conf /etc/memcached.conf
 
@@ -133,3 +133,8 @@ VOLUME /var/www/html
 
 # Expose 80 for apache, 9000 for xdebug
 EXPOSE 80 9000
+
+# Set and run a custom entrypoint
+COPY core/docker-entrypoint.sh /
+RUN chmod 777 /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
