@@ -105,8 +105,9 @@ RUN echo 'zend_extension = /usr/local/lib/php/extensions/no-debug-non-zts-201510
 RUN touch /usr/local/etc/php/conf.d/xdebug.ini &&\
   echo xdebug.remote_enable=1 >> /usr/local/etc/php/conf.d/xdebug.ini &&\
   echo xdebug.remote_autostart=0 >> /usr/local/etc/php/conf.d/xdebug.ini &&\
-  echo xdebug.remote_connect_back=1 >> /usr/local/etc/php/conf.d/xdebug.ini &&\
+  echo xdebug.remote_connect_back=0 >> /usr/local/etc/php/conf.d/xdebug.ini &&\
   echo xdebug.remote_port=9000 >> /usr/local/etc/php/conf.d/xdebug.ini &&\
+  echo xdebug.remote_host=docker_host >> /usr/local/etc/php/conf.d/xdebug.ini &&\
   echo xdebug.remote_log=/tmp/php5-xdebug.log >> /usr/local/etc/php/conf.d/xdebug.ini
 
 RUN rm -rf /var/www/html && \
