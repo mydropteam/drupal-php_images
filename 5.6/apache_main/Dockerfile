@@ -66,7 +66,7 @@ RUN docker-php-ext-install \
 COPY core/memcached.conf /etc/memcached.conf
 
 # SASS and Compass installation
-RUN gem install compass &&\
+RUN gem install sass compass &&\
 
 # Installation of LESS
   npm update -g npm &&\
