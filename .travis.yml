@@ -1,0 +1,22 @@
+language: bash
+services: docker
+
+env:
+  - VERSION=7.1 VARIANT=apache
+  - VERSION=7.1 VARIANT=apache_xhprof
+  - VERSION=7.0 VARIANT=apache
+  - VERSION=7.0 VARIANT=apache_xhprof
+  - VERSION=5.6 VARIANT=apache
+  - VERSION=5.6 VARIANT=apache_xhprof
+
+before_script:
+  - env | sort
+  - cd "$VERSION"
+  - image="dropteam/drupal-php:${VERSION}${VARIANT:+-$VARIANT}"
+  - image="${image//'/'/-}"
+  
+install:
+  - docker build -t "$image" "${VARIANT:-.}" .
+
+script:
+  - docker ps | grep -q "$image" "${VARIANT:-.}"
