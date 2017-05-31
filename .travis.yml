@@ -15,6 +15,6 @@ before_script:
   - cd "${VARIANT}"
 
 script:
-  - travis_retry docker build -t test_image
+  - travis_retry docker build -t test_image .
   - docker run -d -p 127.0.0.1:80:80 --name test_container test_image
   - docker ps | grep -q test_container
