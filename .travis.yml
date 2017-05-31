@@ -14,10 +14,8 @@ before_script:
   - cd "${VERSION}"/"${VARIANT:+-$VARIANT}"
   - image="dropteam/drupal-php:${VERSION}${VARIANT:+-$VARIANT}"
   - image="${image//'/'/-}"
-  
-install:
-  - docker build -t "$image" "${VARIANT:-.}"
-  - docker run -d -p 127.0.0.1:80:80 --name ${VERSION}${VARIANT:+_$VARIANT} "$image"
 
 script:
-  - docker ps | grep -q ${VERSION}${VARIANT:+_$VARIANT}
+  - travis_retry docker build -t "$image" "${VARIANT:-.}"
+  - docker run -d -p 127.0.0.1:80:80 --name "${VERSION}${VARIANT:+_$VARIANT}" "$image"
+  - docker ps | grep -q "${VERSION}${VARIANT:+_$VARIANT}"
