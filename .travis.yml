@@ -16,6 +16,6 @@ before_script:
   - image="dropteam/drupal-php:test"
 
 script:
-  - travis_retry docker build -t "$image"
-  - docker run -d -p 127.0.0.1:80:80 --name test "$image"
+  - travis_retry docker build -t "${image}"
+  - docker run -d -p 127.0.0.1:80:80 --name test "${image}"
   - docker ps | grep -q test
