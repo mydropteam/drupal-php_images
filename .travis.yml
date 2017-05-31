@@ -17,6 +17,6 @@ before_script:
   - image="${image//'/'/-}"
 
 script:
-  - travis_retry docker build -t "$image" "${VARIANT:-.}"
+  - travis_retry docker build -t "$image"
   - docker run -d -p 127.0.0.1:80:80 --name "${VERSION}${VARIANT:+_$VARIANT}" "$image"
   - docker ps | grep -q "${VERSION}${VARIANT:+_$VARIANT}"
