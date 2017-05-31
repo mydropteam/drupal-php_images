@@ -13,9 +13,8 @@ before_script:
   - env | sort
   - cd "${VERSION}"
   - cd "${VARIANT}"
-  - image="dropteam/drupal-php:test"
 
 script:
-  - travis_retry docker build -t "${image}"
-  - docker run -d -p 127.0.0.1:80:80 --name test "${image}"
-  - docker ps | grep -q test
+  - travis_retry docker build -t test_image
+  - docker run -d -p 127.0.0.1:80:80 --name test_container test_image
+  - docker ps | grep -q test_container
