@@ -8,16 +8,16 @@ env:
   - VERSION=7.0 VARIANT=apache_xhprof
   - VERSION=5.6 VARIANT=apache_main
   - VERSION=5.6 VARIANT=apache_xhprof
-
-install:
-  - git clone https://github.com/docker-library/official-images.git ~/official-images
   
 before_script:
   - env | sort
   - cd "$VERSION"
   - image="dropteam/drupal-php:${VERSION}${VARIANT:+-$VARIANT}"
   - image="${image//'/'/-}"
+  
+install:
+  - docker build -t "${VERSION}${VARIANT:+_$VARIANT}" .
+  - docker run -d -p 127.0.0.1:80:80 --name "${VERSION}${VARIANT:+_$VARIANT}" "${VERSION}${VARIANT:+_$VARIANT}"
 
 script:
-  - travis_retry docker build -t "$image" "${VARIANT:-.}"
-  - docker ps | grep -q "$image" "${VARIANT:-.}"
+  - docker ps | grep -q "${VERSION}${VARIANT:+_$VARIANT}"
