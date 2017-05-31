@@ -9,14 +9,15 @@ env:
   - VERSION=5.6 VARIANT=apache
   - VERSION=5.6 VARIANT=apache_xhprof
 
+install:
+  - git clone https://github.com/docker-library/official-images.git ~/official-images
+  
 before_script:
   - env | sort
   - cd "$VERSION"
   - image="dropteam/drupal-php:${VERSION}${VARIANT:+-$VARIANT}"
   - image="${image//'/'/-}"
-  
-install:
-  - docker build -t "$image" "${VARIANT:-.}" .
 
 script:
+  - travis_retry docker build -t "$image" "${VARIANT:-.}"
   - docker ps | grep -q "$image" "${VARIANT:-.}"
