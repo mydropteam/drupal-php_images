@@ -13,10 +13,9 @@ before_script:
   - env | sort
   - cd "${VERSION}"
   - cd "${VARIANT}"
-  - image="dropteam/drupal-php:${VERSION}${VARIANT:+-$VARIANT}"
-  - image="${image//'/'/-}"
+  - image="dropteam/drupal-php:test"
 
 script:
   - travis_retry docker build -t "$image"
-  - docker run -d -p 127.0.0.1:80:80 --name "${VERSION}${VARIANT:+_$VARIANT}" "$image"
-  - docker ps | grep -q "${VERSION}${VARIANT:+_$VARIANT}"
+  - docker run -d -p 127.0.0.1:80:80 --name test "$image"
+  - docker ps | grep -q test
