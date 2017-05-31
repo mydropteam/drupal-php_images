@@ -16,8 +16,8 @@ before_script:
   - image="${image//'/'/-}"
   
 install:
-  - docker build -t ${VERSION}${VARIANT:+_$VARIANT} .
-  - docker run -d -p 127.0.0.1:80:80 --name ${VERSION}${VARIANT:+_$VARIANT}" "${VERSION}${VARIANT:+_$VARIANT}
+  - docker build -t "$image" "${VARIANT:-.}"
+  - docker run -d -p 127.0.0.1:80:80 --name ${VERSION}${VARIANT:+_$VARIANT} "$image"
 
 script:
   - docker ps | grep -q ${VERSION}${VARIANT:+_$VARIANT}
