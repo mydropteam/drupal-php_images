@@ -11,7 +11,8 @@ env:
   
 before_script:
   - env | sort
-  - cd "${VERSION}"/"${VARIANT:+-$VARIANT}"
+  - cd "${VERSION}"
+  - cd "${VARIANT}"
   - image="dropteam/drupal-php:${VERSION}${VARIANT:+-$VARIANT}"
   - image="${image//'/'/-}"
 
