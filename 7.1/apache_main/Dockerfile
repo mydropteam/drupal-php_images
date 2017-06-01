@@ -101,6 +101,13 @@ RUN rm -rf /var/www/html && \
   mkdir -p /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html && \
   chown -R www-data:www-data /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www
 
+# Installation of PHP_CodeSniffer with Drupal coding standards.
+# See https://www.drupal.org/node/1419988#coder-composer
+RUN composer global require drupal/coder
+RUN ln -s ~/.composer/vendor/bin/phpcs /usr/local/bin
+RUN ln -s ~/.composer/vendor/bin/phpcbf /usr/local/bin
+RUN phpcs --config-set installed_paths ~/.composer/vendor/drupal/coder/coder_sniffer
+
 # installation of ssmtp
 RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y ssmtp && rm -r /var/lib/apt/lists/*
 ADD core/ssmtp.conf /etc/ssmtp/ssmtp.conf
@@ -119,6 +126,11 @@ RUN ( \
   ) > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 RUN a2enmod rewrite expires && service apache2 restart
+
+
+# Installation PHPMD
+RUN composer global require phpmd/phpmd
+RUN ln -s ~/.composer/vendor/bin/phpmd /usr/local/bin
 
 # Our apache volume
 VOLUME /var/www/html
