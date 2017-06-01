@@ -74,7 +74,7 @@ RUN pecl install \
 COPY core/memcached.conf /etc/memcached.conf
 
 # Installation node.js
-RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
+RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
 RUN DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install -y nodejs
 
 RUN \
@@ -94,17 +94,6 @@ COPY core/xhgui/config.php /var/www/xhgui/config/
 # Installation of Composer
 RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php
 RUN cd /usr/src && mv composer.phar /usr/bin/composer
-
-# Installation of drush
-RUN git clone https://github.com/drush-ops/drush.git /usr/local/src/drush &&\
-  cd /usr/local/src/drush && git checkout 8.1.6 &&\
-  ln -s /usr/local/src/drush/drush /usr/bin/drush &&\
-  cd /usr/local/src/drush && composer update && composer install
-
-# Installation of Console
-RUN curl https://drupalconsole.com/installer -L -o drupal.phar &&\
-  mv drupal.phar /usr/local/bin/drupal &&\
-  chmod +x /usr/local/bin/drupal
 
 RUN rm -rf /var/www/html && \
   mkdir -p /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html && \
