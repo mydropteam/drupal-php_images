@@ -59,6 +59,7 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
   mcrypt \
   opcache \
   pdo_mysql \
+  pkg-config \
   soap \
   xsl \
   zip
