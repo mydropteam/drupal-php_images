@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   libpng12-dev \
   libjpeg62-turbo-dev \
   libmcrypt-dev \
+  libssl-dev \
   libxml2-dev \
   libxslt1-dev \
   libyaml-dev \
