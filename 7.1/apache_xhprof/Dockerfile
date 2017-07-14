@@ -33,6 +33,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   memcached \
   mysql-client \
   nano \
+  php7.1-dev \
   pkg-config \
   ruby-dev \
   rubygems \
