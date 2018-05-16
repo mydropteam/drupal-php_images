@@ -31,7 +31,6 @@ RUN apt-get update && apt-get install --fix-missing -y \
   linux-libc-dev \
   mysql-client \
   nano \
-  php7.0-dev \
   ruby-dev \
   rubygems \
   sudo \

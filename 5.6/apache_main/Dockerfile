@@ -27,8 +27,6 @@ RUN apt-get update && apt-get install --fix-missing -y \
   memcached \
   mysql-client \
   nano \
-  php5-dev \
-  php5-mysqlnd \
   ruby-dev \
   rubygems \
   sudo \
