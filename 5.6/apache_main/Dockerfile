@@ -107,8 +107,7 @@ RUN curl https://drupalconsole.com/installer -L -o drupal.phar &&\
   phpcs --config-set installed_paths ~/.composer/vendor/drupal/coder/coder_sniffer
 
 # Installation of xdebug
-  RUN apt-get install --fix-missing php5-xdebug -y &&\
-  pecl install xdebug &&\
+  RUN pecl install xdebug-2.5.5 &&\
   echo 'zend_extension = /usr/local/lib/php/extensions/no-debug-non-zts-20131226/xdebug.so' >> /usr/local/etc/php/php.ini &&\
   touch /usr/local/etc/php/conf.d/xdebug.ini &&\
     echo xdebug.remote_enable=1 >> /usr/local/etc/php/conf.d/xdebug.ini &&\

@@ -57,8 +57,6 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
   exif \
   gd \
   intl \
-  mbstring \
-  mcrypt \
   opcache \
   pdo_mysql \
   soap \
