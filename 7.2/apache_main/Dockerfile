@@ -43,7 +43,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
 RUN cd /tmp && git clone https://github.com/php-memcached-dev/php-memcached.git
 RUN cd /tmp/php-memcached && sudo git checkout php7 && phpize && ./configure --disable-memcached-sasl && make && make install
 RUN touch /usr/local/etc/php/conf.d/memcached.ini &&\
- echo "extension=/usr/local/lib/php/extensions/no-debug-non-zts-20160303/memcached.so" >> /usr/local/etc/php/conf.d/memcached.ini
+ echo "extension=/usr/local/lib/php/extensions/no-debug-non-zts-20170718/memcached.so" >> /usr/local/etc/php/conf.d/memcached.ini
 
 RUN chmod +x /usr/local/bin/docker-php-ext-install
 RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
@@ -85,9 +85,9 @@ RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php
 RUN cd /usr/src && mv composer.phar /usr/bin/composer
 
 # Install xdebug. We need at least 2.4 version to have PHP 7 support.
-RUN cd /tmp/ && wget http://xdebug.org/files/xdebug-2.5.4.tgz && tar -xvzf xdebug-2.5.4.tgz && cd xdebug-2.5.4/ && phpize && ./configure --enable-xdebug --with-php-config=/usr/local/bin/php-config && make && make install
-RUN cd /tmp/xdebug-2.5.4 && cp modules/xdebug.so /usr/local/lib/php/extensions/no-debug-non-zts-20160303/
-RUN echo 'zend_extension = /usr/local/lib/php/extensions/no-debug-non-zts-20160303/xdebug.so' >> /usr/local/etc/php/php.ini
+RUN cd /tmp/ && wget http://xdebug.org/files/xdebug-2.6.0RC2.tgz && tar -xvzf xdebug-2.6.0RC2.tgz && cd xdebug-2.6.0RC2.tgz/ && phpize && ./configure --enable-xdebug --with-php-config=/usr/local/bin/php-config && make && make install
+RUN cd /tmp/xdebug-2.6.0RC2.tgz && cp modules/xdebug.so /usr/local/lib/php/extensions/no-debug-non-zts-20170718/
+RUN echo 'zend_extension = /usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so' >> /usr/local/etc/php/php.ini
 RUN touch /usr/local/etc/php/conf.d/xdebug.ini &&\
   echo xdebug.remote_enable=1 >> /usr/local/etc/php/conf.d/xdebug.ini &&\
   echo xdebug.remote_autostart=0 >> /usr/local/etc/php/conf.d/xdebug.ini &&\
