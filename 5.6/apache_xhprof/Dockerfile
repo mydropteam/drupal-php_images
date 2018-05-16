@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   libpng12-dev \
   libjpeg62-turbo-dev \
   libmcrypt-dev \
+  libssl-dev \
   libxml2-dev \
   libxslt1-dev \
   libyaml-dev \
@@ -27,8 +28,6 @@ RUN apt-get update && apt-get install --fix-missing -y \
   memcached \
   mysql-client \
   nano \
-  php5-dev \
-  php5-mysqlnd \
   ruby-dev \
   rubygems \
   sudo \
@@ -37,19 +36,15 @@ RUN apt-get update && apt-get install --fix-missing -y \
   wget \
   zip
 
-# Install PECL packages
-RUN pecl install \
-  uploadprogress \
-  memcache \
-  mongodb \
-  xhprof-0.9.4 \
-  yaml \
-  && docker-php-ext-enable \
-  uploadprogress \
-  memcache \
-  mongodb \
-  xhprof \
-  yaml
+  # Install PECL packages
+  COPY docker-php-pecl-install /usr/local/bin/
+  RUN chmod +x /usr/local/bin/docker-php-pecl-install
+  RUN docker-php-pecl-install \
+    memcache-3.0.8 \
+    mongo \
+    uploadprogress-1.0.3.1 \
+    xhprof-0.9.4 \
+    yaml-1.2.0
 
 RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-install \

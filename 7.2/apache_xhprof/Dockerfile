@@ -1,5 +1,5 @@
 # Pull base image.
-FROM php:7.0-apache
+FROM php:7.2-apache
 
 COPY config/php.ini /usr/local/etc/php/
 
@@ -7,7 +7,7 @@ COPY config/php.ini /usr/local/etc/php/
 COPY config/bashrc /root/
 RUN mv /root/bashrc /root/.bashrc
 
-RUN apt-get update && apt-get install --fix-missing wget -y
+RUN apt-get update && apt-get install --fix-missing wget gnupg -y
 RUN echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
 RUN echo "deb-src http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
 RUN cd /tmp && wget https://www.dotdeb.org/dotdeb.gpg && apt-key add dotdeb.gpg
@@ -22,9 +22,10 @@ RUN apt-get update && apt-get install --fix-missing -y \
   libicu-dev \
   libmemcached-tools \
   libmemcached-dev \
-  libpng12-dev \
+  libpng-dev \
   libjpeg62-turbo-dev \
   libmcrypt-dev \
+  libssl-dev \
   libxml2-dev \
   libxslt1-dev \
   libyaml-dev \
@@ -32,6 +33,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   memcached \
   mysql-client \
   nano \
+  pkg-config \
   ruby-dev \
   rubygems \
   sudo \
@@ -44,7 +46,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
 RUN cd /tmp && git clone https://github.com/php-memcached-dev/php-memcached.git
 RUN cd /tmp/php-memcached && sudo git checkout php7 && phpize && ./configure --disable-memcached-sasl && make && make install
 RUN touch /usr/local/etc/php/conf.d/memcached.ini &&\
- echo "extension=/usr/local/lib/php/extensions/no-debug-non-zts-20151012/memcached.so" >> /usr/local/etc/php/conf.d/memcached.ini
+ echo "extension=/usr/local/lib/php/extensions/no-debug-non-zts-20170718/memcached.so" >> /usr/local/etc/php/conf.d/memcached.ini
 
 
 
@@ -55,8 +57,6 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
   exif \
   gd \
   intl \
-  mbstring \
-  mcrypt \
   opcache \
   pdo_mysql \
   soap \
@@ -72,11 +72,11 @@ RUN pecl install \
 COPY core/memcached.conf /etc/memcached.conf
 
 # Installation node.js
-RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
+RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
 RUN DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install -y nodejs
 
 RUN \
-cd /tmp && git clone https://github.com/tideways/php-profiler-extension.git && cd /tmp/php-profiler-extension && phpize7.0 && ./configure && make && make install; \
+cd /tmp && git clone https://github.com/tideways/php-profiler-extension.git && cd /tmp/php-profiler-extension && phpize && ./configure && make && make install; \
 echo "extension=tideways.so" >> /usr/local/etc/php/php.ini && echo "tideways.auto_prepend_library=0" >> /usr/local/etc/php/php.ini; \
 
 git clone https://github.com/perftools/xhgui.git /var/www/xhgui; \
@@ -92,17 +92,6 @@ COPY core/xhgui/config.php /var/www/xhgui/config/
 # Installation of Composer
 RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php
 RUN cd /usr/src && mv composer.phar /usr/bin/composer
-
-# Installation of drush
-RUN git clone https://github.com/drush-ops/drush.git /usr/local/src/drush &&\
-  cd /usr/local/src/drush && git checkout 8.1.6 &&\
-  ln -s /usr/local/src/drush/drush /usr/bin/drush &&\
-  cd /usr/local/src/drush && composer update && composer install
-
-# Installation of Console
-RUN curl https://drupalconsole.com/installer -L -o drupal.phar &&\
-  mv drupal.phar /usr/local/bin/drupal &&\
-  chmod +x /usr/local/bin/drupal
 
 RUN rm -rf /var/www/html && \
   mkdir -p /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html && \
@@ -132,8 +121,3 @@ VOLUME /var/www/html
 
 # Expose 80 for apache, 9000 for xdebug
 EXPOSE 80 9000
-
-# Set a custom entrypoint.
-COPY core/docker-entrypoint.sh /
-RUN chmod +x /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]

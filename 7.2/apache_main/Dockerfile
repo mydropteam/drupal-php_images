@@ -1,5 +1,5 @@
 # Pull base image.
-FROM php:7.0-apache
+FROM php:7.2-apache
 
 COPY config/php.ini /usr/local/etc/php/
 
@@ -7,7 +7,7 @@ COPY config/php.ini /usr/local/etc/php/
 COPY config/bashrc /root/
 RUN mv /root/bashrc /root/.bashrc
 
-RUN apt-get update && apt-get install --fix-missing wget -y
+RUN apt-get update && apt-get install --fix-missing wget gnupg -y
 RUN echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
 RUN echo "deb-src http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
 RUN cd /tmp && wget https://www.dotdeb.org/dotdeb.gpg && apt-key add dotdeb.gpg
@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   libicu-dev \
   libmemcached-tools \
   libmemcached-dev \
-  libpng12-dev \
+  libpng-dev \
   libjpeg62-turbo-dev \
   libmcrypt-dev \
   libxml2-dev \
@@ -43,7 +43,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
 RUN cd /tmp && git clone https://github.com/php-memcached-dev/php-memcached.git
 RUN cd /tmp/php-memcached && sudo git checkout php7 && phpize && ./configure --disable-memcached-sasl && make && make install
 RUN touch /usr/local/etc/php/conf.d/memcached.ini &&\
- echo "extension=/usr/local/lib/php/extensions/no-debug-non-zts-20151012/memcached.so" >> /usr/local/etc/php/conf.d/memcached.ini
+ echo "extension=/usr/local/lib/php/extensions/no-debug-non-zts-20170718/memcached.so" >> /usr/local/etc/php/conf.d/memcached.ini
 
 RUN chmod +x /usr/local/bin/docker-php-ext-install
 RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
@@ -52,8 +52,6 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
   exif \
   gd \
   intl \
-  mbstring \
-  mcrypt \
   opcache \
   pdo_mysql \
   soap \
@@ -67,7 +65,7 @@ RUN gem install sass
 RUN gem install compass
 
 # Installation node.js
-RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
+RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
 RUN DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install -y nodejs
 
 # Installation of LESS
@@ -86,27 +84,15 @@ RUN npm install -g bower
 RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php
 RUN cd /usr/src && mv composer.phar /usr/bin/composer
 
-# Installation of drush
-RUN git clone https://github.com/drush-ops/drush.git /usr/local/src/drush &&\
-  cd /usr/local/src/drush && git checkout 8.1.6 &&\
-  ln -s /usr/local/src/drush/drush /usr/bin/drush &&\
-  cd /usr/local/src/drush && composer update && composer install
-
-# Installation of Console
-RUN curl https://drupalconsole.com/installer -L -o drupal.phar &&\
-  mv drupal.phar /usr/local/bin/drupal &&\
-  chmod +x /usr/local/bin/drupal
-
 # Install xdebug. We need at least 2.4 version to have PHP 7 support.
-RUN cd /tmp/ && wget http://xdebug.org/files/xdebug-2.4.0.tgz && tar -xvzf xdebug-2.4.0.tgz && cd xdebug-2.4.0/ && phpize && ./configure --enable-xdebug --with-php-config=/usr/local/bin/php-config && make && make install
-RUN cd /tmp/xdebug-2.4.0 && cp modules/xdebug.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/
-RUN echo 'zend_extension = /usr/local/lib/php/extensions/no-debug-non-zts-20151012/xdebug.so' >> /usr/local/etc/php/php.ini
+RUN cd /tmp/ && wget http://xdebug.org/files/xdebug-2.6.0RC2.tgz && tar -xvzf xdebug-2.6.0RC2.tgz && cd xdebug-2.6.0RC2/ && phpize && ./configure --enable-xdebug --with-php-config=/usr/local/bin/php-config && make && make install
+RUN cd /tmp/xdebug-2.6.0RC2 && cp modules/xdebug.so /usr/local/lib/php/extensions/no-debug-non-zts-20170718/
+RUN echo 'zend_extension = /usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so' >> /usr/local/etc/php/php.ini
 RUN touch /usr/local/etc/php/conf.d/xdebug.ini &&\
   echo xdebug.remote_enable=1 >> /usr/local/etc/php/conf.d/xdebug.ini &&\
   echo xdebug.remote_autostart=0 >> /usr/local/etc/php/conf.d/xdebug.ini &&\
-  echo xdebug.remote_connect_back=0 >> /usr/local/etc/php/conf.d/xdebug.ini &&\
+  echo xdebug.remote_connect_back=1 >> /usr/local/etc/php/conf.d/xdebug.ini &&\
   echo xdebug.remote_port=9000 >> /usr/local/etc/php/conf.d/xdebug.ini &&\
-  echo xdebug.remote_host=docker_host >> /usr/local/etc/php/conf.d/xdebug.ini &&\
   echo xdebug.remote_log=/tmp/php5-xdebug.log >> /usr/local/etc/php/conf.d/xdebug.ini
 
 RUN rm -rf /var/www/html && \
@@ -139,6 +125,7 @@ RUN ( \
 
 RUN a2enmod rewrite expires && service apache2 restart
 
+
 # Installation PHPMD
 RUN composer global require phpmd/phpmd
 RUN ln -s ~/.composer/vendor/bin/phpmd /usr/local/bin
@@ -153,8 +140,3 @@ RUN chmod 600 /var/www/.ssh/
 
 # Expose 80 for apache, 9000 for xdebug
 EXPOSE 80 9000
-
-# Set a custom entrypoint.
-COPY core/docker-entrypoint.sh /
-RUN chmod +x /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]

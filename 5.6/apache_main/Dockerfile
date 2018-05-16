@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   libpng12-dev \
   libjpeg62-turbo-dev \
   libmcrypt-dev \
+  libssl-dev \
   libxml2-dev \
   libxslt1-dev \
   libyaml-dev \
@@ -27,8 +28,6 @@ RUN apt-get update && apt-get install --fix-missing -y \
   memcached \
   mysql-client \
   nano \
-  php5-dev \
-  php5-mysqlnd \
   ruby-dev \
   rubygems \
   sudo \
@@ -44,7 +43,7 @@ RUN docker-php-pecl-install \
   uploadprogress-1.0.3.1 \
   memcache-3.0.8 \
   yaml-1.2.0 \
-  mongo-1.6.12
+  mongo
 
 RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-install \
@@ -108,8 +107,7 @@ RUN curl https://drupalconsole.com/installer -L -o drupal.phar &&\
   phpcs --config-set installed_paths ~/.composer/vendor/drupal/coder/coder_sniffer
 
 # Installation of xdebug
-  RUN apt-get install --fix-missing php5-xdebug -y &&\
-  pecl install xdebug &&\
+  RUN pecl install xdebug-2.5.5 &&\
   echo 'zend_extension = /usr/local/lib/php/extensions/no-debug-non-zts-20131226/xdebug.so' >> /usr/local/etc/php/php.ini &&\
   touch /usr/local/etc/php/conf.d/xdebug.ini &&\
     echo xdebug.remote_enable=1 >> /usr/local/etc/php/conf.d/xdebug.ini &&\
