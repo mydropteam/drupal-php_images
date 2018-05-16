@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   libicu-dev \
   libmemcached-tools \
   libmemcached-dev \
-  libpng12-dev \
+  libpng-dev \
   libjpeg62-turbo-dev \
   libmcrypt-dev \
   libxml2-dev \

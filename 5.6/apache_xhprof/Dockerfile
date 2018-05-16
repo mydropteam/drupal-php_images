@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   libpng12-dev \
   libjpeg62-turbo-dev \
   libmcrypt-dev \
+  libssl-dev \
   libxml2-dev \
   libxslt1-dev \
   libyaml-dev \
@@ -40,7 +41,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   RUN chmod +x /usr/local/bin/docker-php-pecl-install
   RUN docker-php-pecl-install \
     memcache-3.0.8 \
-    mongo-1.6.12 \
+    mongo \
     uploadprogress-1.0.3.1 \
     xhprof-0.9.4 \
     yaml-1.2.0

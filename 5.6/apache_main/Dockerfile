@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   libpng12-dev \
   libjpeg62-turbo-dev \
   libmcrypt-dev \
+  libssl-dev \
   libxml2-dev \
   libxslt1-dev \
   libyaml-dev \
@@ -42,7 +43,7 @@ RUN docker-php-pecl-install \
   uploadprogress-1.0.3.1 \
   memcache-3.0.8 \
   yaml-1.2.0 \
-  mongo-1.6.12
+  mongo
 
 RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-install \
