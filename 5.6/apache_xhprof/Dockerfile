@@ -46,6 +46,11 @@ RUN apt-get update && apt-get install --fix-missing -y \
     xhprof-0.9.4 \
     yaml-1.2.0
 
+# mongodb is not available under docker-php-pecl-install.
+RUN pecl install mongodb
+RUN sed -i -e '$a [mongodb] extension=mongodb.so' \
+  /usr/local/etc/php/php.ini
+  
 RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-install \
   calendar \
