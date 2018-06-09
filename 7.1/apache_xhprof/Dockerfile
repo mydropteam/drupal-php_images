@@ -7,7 +7,7 @@ COPY config/php.ini /usr/local/etc/php/
 COPY config/bashrc /root/
 RUN mv /root/bashrc /root/.bashrc
 
-RUN apt-get update && apt-get install --fix-missing wget -y
+RUN apt-get update && apt-get install --fix-missing wget gnupg -y
 RUN echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
 RUN echo "deb-src http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
 RUN cd /tmp && wget https://www.dotdeb.org/dotdeb.gpg && apt-key add dotdeb.gpg
@@ -69,7 +69,7 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
 RUN pecl install \
   mongodb \
 && docker-php-ext-enable \
-  mongodb 
+  mongodb
 
 COPY core/memcached.conf /etc/memcached.conf
 

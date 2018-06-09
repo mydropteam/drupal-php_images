@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   libicu-dev \
   libmemcached-tools \
   libmemcached-dev \
-  libpng12-dev \
+  libpng-dev \
   libjpeg62-turbo-dev \
   libmcrypt-dev \
   libssl-dev \
@@ -50,7 +50,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
 RUN pecl install mongodb
 RUN sed -i -e '$a [mongodb] extension=mongodb.so' \
   /usr/local/etc/php/php.ini
-  
+
 RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-install \
   calendar \
