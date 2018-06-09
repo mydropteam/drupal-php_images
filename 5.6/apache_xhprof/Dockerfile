@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   imagemagick \
   graphviz \
   git \
+  gnupg \
   libicu-dev \
   libmemcached-tools \
   libmemcached-dev \
