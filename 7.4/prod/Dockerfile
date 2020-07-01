@@ -1,3 +1,5 @@
+FROM composer:2.0 as composer
+
 FROM php:7.4-apache-buster
 RUN set -eux; \
 	\
@@ -50,5 +52,7 @@ RUN { \
 		echo 'opcache.revalidate_freq=60'; \
 		echo 'opcache.fast_shutdown=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
 WORKDIR /var/www/html
