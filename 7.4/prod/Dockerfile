@@ -1,4 +1,4 @@
-FROM composer:2.0 as composer
+FROM composer:1 as composer
 
 FROM php:7.4-apache-buster
 RUN set -eux; \
