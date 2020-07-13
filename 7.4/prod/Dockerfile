@@ -16,6 +16,7 @@ RUN set -eux; \
 		libpng-dev \
 		libpq-dev \
 		libzip-dev \
+		git \
 	; \
 	\
 	docker-php-ext-configure gd \
