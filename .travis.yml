@@ -3,6 +3,7 @@ services: docker
 
 env:
   - VERSION=7.4 VARIANT=prod
+  - VERSION=7.4 VARIANT=dev
   - VERSION=7.2 VARIANT=apache_main
   - VERSION=7.2 VARIANT=apache_xhprof
   - VERSION=7.1 VARIANT=apache_main
