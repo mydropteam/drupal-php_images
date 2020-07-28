@@ -31,7 +31,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   libyaml-dev \
   linux-libc-dev \
   memcached \
-  mysql-client \
+  default-mysql-client \
   nano \
   pkg-config \
   ruby-dev \

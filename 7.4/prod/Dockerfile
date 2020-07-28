@@ -17,7 +17,6 @@ RUN set -eux; \
 		libpq-dev \
 		libzip-dev \
 		git \
-		mariadb-client \
 	; \
 	\
 	docker-php-ext-configure gd \
@@ -47,6 +46,8 @@ RUN set -eux; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update;
+RUN apt-get install -y mariadb-client
 RUN { \
 		echo 'opcache.memory_consumption=128'; \
 		echo 'opcache.interned_strings_buffer=8'; \

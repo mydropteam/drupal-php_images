@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install --fix-missing -y \
   libxslt1-dev \
   libyaml-dev \
   linux-libc-dev \
-  mysql-client \
+  default-mysql-client \
   nano \
   ruby-dev \
   rubygems \
