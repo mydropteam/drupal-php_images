@@ -17,6 +17,7 @@ RUN set -eux; \
 		libpq-dev \
 		libzip-dev \
 		git \
+		mariadb-client \
 	; \
 	\
 	docker-php-ext-configure gd \
