@@ -72,8 +72,13 @@ RUN pecl install \
 COPY core/memcached.conf /etc/memcached.conf
 
 # Installation node.js
-RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
 RUN DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install -y nodejs
+
+## install nvm
+RUN git clone https://github.com/creationix/nvm.git /opt/nvm
+RUN mkdir /usr/local/nvm
+
 
 RUN \
 cd /tmp && git clone https://github.com/tideways/php-profiler-extension.git && cd /tmp/php-profiler-extension && phpize && ./configure && make && make install; \
@@ -98,8 +103,8 @@ RUN rm -rf /var/www/html && \
   chown -R www-data:www-data /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www
 
 # installation of ssmtp
-RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y ssmtp && rm -r /var/lib/apt/lists/*
-ADD core/ssmtp.conf /etc/ssmtp/ssmtp.conf
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y msmtp && rm -r /var/lib/apt/lists/*
+ADD core/ssmtp.conf /etc/msmtp/msmtp.conf
 ADD core/php-smtp.ini /usr/local/etc/php/conf.d/php-smtp.ini
 
 COPY config/apache2.conf /etc/apache2
