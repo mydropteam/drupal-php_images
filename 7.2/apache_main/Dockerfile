@@ -65,8 +65,12 @@ RUN gem install sass
 RUN gem install compass
 
 # Installation node.js
-RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo bash -
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
 RUN DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install -y nodejs
+
+## install nvm
+RUN git clone https://github.com/creationix/nvm.git /opt/nvm
+RUN mkdir /usr/local/nvm
 
 # Installation of LESS
 RUN npm install -g less && npm install -g less-plugin-clean-css
@@ -107,8 +111,8 @@ RUN ln -s ~/.composer/vendor/bin/phpcbf /usr/local/bin
 RUN phpcs --config-set installed_paths ~/.composer/vendor/drupal/coder/coder_sniffer
 
 # installation of ssmtp
-RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y ssmtp && rm -r /var/lib/apt/lists/*
-ADD core/ssmtp.conf /etc/ssmtp/ssmtp.conf
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y msmtp && rm -r /var/lib/apt/lists/*
+ADD core/ssmtp.conf /etc/msmtp/msmtp.conf
 ADD core/php-smtp.ini /usr/local/etc/php/conf.d/php-smtp.ini
 
 COPY config/apache2.conf /etc/apache2

@@ -4,3 +4,6 @@ alias svn='sudo -u www-data svn'
 alias git='sudo -u www-data git'
 alias wget='sudo -u www-data wget'
 alias ssh='sudo -u www-data ssh'
+
+export NVM_DIR=/usr/local/nvm
+source /opt/nvm/nvm.sh
