@@ -14,6 +14,7 @@ RUN set -eux; \
 		libfreetype6-dev \
 		libjpeg-dev \
 		libpng-dev \
+		libwebp-dev \
 		libpq-dev \
 		libzip-dev \
 		git \
@@ -22,6 +23,7 @@ RUN set -eux; \
 	docker-php-ext-configure gd \
 		--with-freetype \
 		--with-jpeg=/usr \
+		--with-webp \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
