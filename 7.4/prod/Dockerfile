@@ -1,6 +1,6 @@
 FROM composer:1 as composer
 
-FROM php:7.4-apache-buster
+FROM php:7.4.27-zts-bullseye
 RUN set -eux; \
 	\
 	if command -v a2enmod; then \
