@@ -2,6 +2,9 @@ language: bash
 services: docker
 
 env:
+  - VERSION=8.1 VARIANT=lambdatest-java
+  - VERSION=8.1 VARIANT=prod
+  - VERSION=8.1 VARIANT=dev
   - VERSION=7.4 VARIANT=lambdatest-java
   - VERSION=7.4 VARIANT=prod
   - VERSION=7.4 VARIANT=dev
