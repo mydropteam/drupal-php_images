@@ -1,5 +1,5 @@
 # Pull base image.
-FROM php:7.0-apache
+FROM php:7.4.21-apache
 
 COPY config/php.ini /usr/local/etc/php/
 
