@@ -1,6 +1,6 @@
 FROM composer:2 as composer
 
-FROM php:8.3-apache-bullseye
+FROM php:8.3.36-apache
 RUN set -eux; \
 	\
 	if command -v a2enmod; then \
